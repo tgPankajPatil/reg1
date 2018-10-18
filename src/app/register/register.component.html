@@ -1,0 +1,94 @@
+﻿<div class="col-md-6 col-md-offset-3">
+    <h2>Register</h2>
+    <form [formGroup]="registerationForm" (ngSubmit)="register()">
+        <div class="form-group">
+            <label for="username">User Name</label>
+            <input type="text" class="form-control" formControlName="username" [(ngModel)]="model.username" />
+            <div *ngIf="model.username == null && submitted && registerationForm.controls['username'].errors.required"
+                class="help-block">User Name is required</div>
+        </div>
+        <div class="form-group">
+            <label for="firstName">Name</label>
+            <input type="text" class="form-control" formControlName="firstName" [(ngModel)]="model.firstName" />
+            <div *ngIf="model.firstName == null && submitted && registerationForm.controls['firstName'].errors" class="help-block">Name
+                is required</div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control"  formControlName="email" [(ngModel)]="model.email"  required />
+            <div *ngIf="emailFlag" class="help-block alert-danger">Email
+                is required</div>
+            <div *ngIf="emailFlag" class="help-block alert-danger">You have entered an invalid email address!</div>
+
+        </div>
+        <div class="form-group">
+            <label for="username">User Type </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <select [(ngModel)]="userT" formControlName="userType">
+                <option *ngFor="let userType of userTypes">{{userType}}</option>
+            </select>
+            <div *ngIf="submitted && registerationForm.controls['userType'].errors" class="help-block">userType is
+                required
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" (keyup)="checkPassqordFormat()" class="form-control" formControlName="password" [(ngModel)]="model.password" />
+             <!-- <div *ngIf="submitted && registerationForm.get('password').touched && registerationForm.get('password').errors.pattern" class="help-block">enter alphanumeric password</div> -->
+             <!-- <div *ngIf="submitted && registerationForm.controls['password'].errors.minlength"
+             class="help-block">Password length should be min 8</div> -->
+
+             <div *ngIf="model.password == null && submitted && registerationForm.controls['password'].errors.required"
+                class="help-block">Password is required</div>
+                <div *ngIf="passwordPatternFlag">
+                        password should have minimum 8 character and in alpha-numeric pattern
+                </div>
+
+
+        </div>
+        <div class="form-group">
+            <label for="password">Confirm Password</label>
+            <input type="password" class="form-control" formControlName="confirmPassword" (keyup)="checkPassword()"
+                [(ngModel)]="model.confirmPassword">
+            <div *ngIf="registerationForm.get('confirmPassword').dirty && !validPassword" class="alert alert-danger">
+                password doesn't match
+            </div>
+
+            <div *ngIf="model.confirmPassword == null && submitted && registerationForm.controls['confirmPassword'].errors.required"
+                class="help-block"> Confirm Password is required</div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="phoneNo">Phone No</label>
+            <input type="number"  (keyup)="keyPress()" minlength=10 maxlength=10 class="form-control" formControlName="phoneNo" [(ngModel)]="model.phoneNo"   required/>
+            <div *ngIf="telFlag">enter valid phone no</div>
+            
+            <!--  <div *ngIf="registerationForm.get('phoneNo').touched && registerationForm.controls['phoneNo'].errors "
+                class="help-block">enter 10 digit phone number</div>
+           <div *ngIf="registerationForm.get('phoneNo').touched && registerationForm.controls['phoneNo'].errors" 
+                class="help-block">enter 10 digit phone number</div>-->
+            <div *ngIf="model.phoneNo == null && submitted && registerationForm.controls['phoneNo'].errors.required" class="help-block">Phone No
+                is required</div>
+
+        </div>
+        <div class="form-group">
+            <label for="address">Address </label>
+            <textarea class="form-control" formControlName="address" [(ngModel)]="model.address" maxlength="30"></textarea>
+            <div *ngIf="model.address == null && submitted && registerationForm.controls['address'].errors" class="help-block">Address
+                is required</div>
+
+        </div>
+
+
+
+        <div class="form-group">
+            <button [disabled]="loading" class="btn btn-primary">Register</button>
+            <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+            <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
+        </div>
+    </form>
+</div>
